@@ -175,7 +175,7 @@ sudo -u gitlab -H bundle exec rake gitlab:app:setup RAILS_ENV=production
 sudo wget https://raw.github.com/gitlabhq/gitlab-recipes/4-0-stable/init.d/gitlab -P /etc/init.d/
 sudo chmod +x /etc/init.d/gitlab
 
-sudo update-rc.d gitlab defaults 21
+sudo update-rc.d gitlab defaults 70 30
 
 
 #==
