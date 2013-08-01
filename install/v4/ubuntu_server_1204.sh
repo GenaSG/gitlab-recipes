@@ -70,14 +70,14 @@ sudo DEBIAN_FRONTEND='noninteractive' apt-get install -y postfix-policyd-spf-pyt
 #==
 #== 2. RUBY
 #==
-wget http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p327.tar.gz
-tar xfvz ruby-1.9.3-p327.tar.gz
-cd ruby-1.9.3-p327
+sudo apt-get remove -y ruby1.8
+mkdir /tmp/ruby && cd /tmp/ruby
+curl --progress ftp://ftp.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p247.tar.gz | tar xz
+cd ruby-2.0.0-p247
 ./configure
 make
 sudo make install
-sudo gem install bundler
-
+sudo gem install bundler --no-ri --no-rdoc
 #==
 #== 3. Users
 #==
