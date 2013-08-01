@@ -132,12 +132,13 @@ sudo rm -rf /tmp/gitolite-admin
 #== 5. MySQL
 #==
 sudo apt-get install -y makepasswd # Needed to create a unique password non-interactively.
+sudo apt-get install -y mysql-server mysql-client libmysqlclient-dev
 userPassword=$(makepasswd --char=10) # Generate a random MySQL password
 # Note that the lines below creates a cleartext copy of the random password in /var/cache/debconf/passwords.dat
 # This file is normally only readable by root and the password will be deleted by the package management system after install.
 echo mysql-server mysql-server/root_password password $userPassword | sudo debconf-set-selections
 echo mysql-server mysql-server/root_password_again password $userPassword | sudo debconf-set-selections
-sudo apt-get install -y mysql-server mysql-client libmysqlclient-dev
+#sudo apt-get install -y mysql-server mysql-client libmysqlclient-dev
 
 #==
 #== 6. GitLab
@@ -167,8 +168,8 @@ sudo -u gitlab -H bundle install --deployment --without development postgres tes
 sudo -u gitlab -H git config --global user.name "GitLab"
 sudo -u gitlab -H git config --global user.email "gitlab@localhost"
 
-sudo cp ./lib/hooks/post-receive /home/git/.gitolite/hooks/common/post-receive
-sudo chown git:git /home/git/.gitolite/hooks/common/post-receive
+#sudo cp ./lib/hooks/post-receive /home/git/.gitolite/hooks/common/post-receive
+#sudo chown git:git /home/git/.gitolite/hooks/common/post-receive
 
 sudo -u gitlab -H bundle exec rake gitlab:app:setup RAILS_ENV=production
 
