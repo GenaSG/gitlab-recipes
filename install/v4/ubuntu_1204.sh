@@ -2,12 +2,12 @@ echo "********************************"
 echo "    GitLab Install script"
 echo "********************************"
 read -s -p "> MySQL root pass: " mysqlpass
+echo -e "\\n"
 read -p "Domain name: " domain_name
 # Needed to create a unique password non-interactively.
 sudo apt-get install -y makepasswd 
 # Generate a random gitlab MySQL password
 gitlabpass=$(makepasswd --char=16)
-#gitlabpass="Only4Root" 
 currentdir=$(pwd)
 
 # Install essentials
@@ -60,17 +60,21 @@ sudo -u git -H ./bin/install
 sudo apt-get install -y mysql-server mysql-client libmysqlclient-dev
 
 # Create a user for GitLab.
-mysql -uroot -p$mysqlpass -e "CREATE USER 'gitlab'@'localhost' IDENTIFIED BY '$gitlabpass';"
-
-# Create the GitLab production database
-mysql -uroot -p$mysqlpass -e "CREATE DATABASE IF NOT EXISTS \`gitlabhq_production\` DEFAULT CHARACTER SET \`utf8\` COLLATE \`utf8_unicode_ci\`;"
-
-# Grant the GitLab user necessary permissopns on the table.
-mysql -uroot -p$mysqlpass -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON \`gitlabhq_production\`.* TO 'gitlab'@'localhost';"
-
-# Quit the database session
-mysql -uroot -p$mysqlpass -e "\\q;"
-
+#mysql -uroot -p$mysqlpass -e "CREATE USER 'gitlab'@'localhost' IDENTIFIED BY '$gitlabpass';"
+#
+## Create the GitLab production database
+#mysql -uroot -p$mysqlpass -e "CREATE DATABASE IF NOT EXISTS \`gitlabhq_production\` DEFAULT CHARACTER SET \`utf8\` COLLATE \`utf8_unicode_ci\`;"
+#
+## Grant the GitLab user necessary permissopns on the table.
+#mysql -uroot -p$mysqlpass -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON \`gitlabhq_production\`.* TO 'gitlab'@'localhost';"
+#
+## Quit the database session
+#mysql -uroot -p$mysqlpass -e "\\q;"
+mysql -uroot -p$mysqlpass << QUERY
+CREATE USER 'gitlab'@'localhost' IDENTIFIED BY '$gitlabpass';
+CREATE DATABASE IF NOT EXISTS \`gitlabhq_production\` DEFAULT CHARACTER SET \`utf8\` COLLATE \`utf8_unicode_ci\`;
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON \`gitlabhq_production\`.* TO 'gitlab'@'localhost';
+QUERY
 # Try connecting to the new database with the new user
 sudo -u git -H mysql -ugitlab -p$gitlabpass -D gitlabhq_production
 
